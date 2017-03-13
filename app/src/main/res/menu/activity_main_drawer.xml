@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/scan"
+            android:icon="@drawable/scan"
+            android:title="Scan" />
+        <item
+            android:id="@+id/add"
+            android:icon="@drawable/ic_fingerprint_black_24dp"
+            android:title="Add/Remove Fingerprint" />
+
+        <item
+            android:id="@+id/setting"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Settings" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_about"
+                android:icon="@android:drawable/ic_dialog_info"
+                android:title="About Us" />
+
+        </menu>
+    </item>
+
+</menu>
