@@ -3,7 +3,7 @@
     package="com.example.shreyamshah.sqrl">
 
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -11,10 +11,9 @@
         android:name="android.hardware.fingerprint"
         android:required="false" />
     <uses-feature
-        android:name="android.hardware.Camera"
+        android:name="android.hardware.camera2"
         android:required="false" />
 
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -34,7 +33,13 @@
         <activity
             android:name=".Scan"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".Finger"></activity>
+        <activity
+            android:name=".Finger"
+            android:parentActivityName=".Scan" />
+        <activity
+            android:name=".Login"
+            android:label="@string/title_activity_login"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

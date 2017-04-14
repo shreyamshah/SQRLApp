@@ -5,11 +5,11 @@
         <item
             android:id="@+id/scan"
             android:icon="@drawable/scan"
-            android:title="Scan" />
+            android:title="Register" />
         <item
-            android:id="@+id/add"
-            android:icon="@drawable/ic_fingerprint_black_24dp"
-            android:title="Add/Remove Fingerprint" />
+            android:id="@+id/login"
+            android:icon="@drawable/scan"
+            android:title="Login" />
 
         <item
             android:id="@+id/setting"

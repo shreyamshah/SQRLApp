@@ -16,4 +16,5 @@
     <string name="fingerprint_description">Confirm Fingerprint to continue</string>
     <string name="fingerprint_hint">Touch Sensor to Authenticate</string>
     <string name="title_activity_header">Header</string>
+    <string name="title_activity_login">Login</string>
 </resources>

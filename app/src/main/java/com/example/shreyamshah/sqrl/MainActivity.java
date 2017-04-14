@@ -103,7 +103,10 @@ public class MainActivity extends AppCompatActivity
             startActivityForResult(bar, 1001);
 
             // Handle the camera action
-        } else if (id == R.id.add) {
+        } else if (id == R.id.login) {
+
+            Intent bar=new Intent(MainActivity.this,Login.class);
+            startActivityForResult(bar, 1004);
 
         } else if (id == R.id.setting) {
 
@@ -133,5 +136,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         }
+
     }
 }

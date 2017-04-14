@@ -1,12 +1,18 @@
 package com.example.shreyamshah.sqrl;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
@@ -15,8 +21,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.vision.*;
-import com.google.android.gms.vision.barcode.*;
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -24,51 +32,47 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 
-import static com.example.shreyamshah.sqrl.Scan.POST;
+import static com.example.shreyamshah.sqrl.Login.POST;
 
+public class Login extends AppCompatActivity {
 
-public class Scan extends Activity {
     SurfaceView sv;
-   static TextView tv;
-   static User user;
-    String users[]=new String[4];
+    static TextView tv;
+    static String s;
     CameraSource cameraSource;
-    // check if you are connected or not
-
-    public static String POST(){
+    static SharedPreferences preferences;
+    public static String POST(String s){
 
         tv.setVisibility(View.GONE);
         String result = "";
 
-            try {
-                URL url=new URL("http://192.168.1.104//SQRL//insert.php");
-                URLConnection conn = url.openConnection();
-                conn.setDoOutput(true);
-                Uri.Builder builder=new Uri.Builder().appendQueryParameter("name",user.name)
-                        .appendQueryParameter("email",user.email)
-                        .appendQueryParameter("no",user.no);
-                String query=builder.build().getEncodedQuery();
-                Log.d("query",query);
-                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-                wr.write( query );
-                wr.flush();
-                String line=null;
-               BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while((line = reader.readLine()) != null)
-                {
-                    // Append server response in string
-                        tv.setText(line);
-                        tv.setVisibility(View.VISIBLE);
-                }
-
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            URL url=new URL("http://192.168.1.104//SQRL//sign.php");
+            URLConnection conn = url.openConnection();
+            conn.setDoOutput(true);
+            Uri.Builder builder=new Uri.Builder().appendQueryParameter("no",s)
+                    .appendQueryParameter("email",preferences.getString("email",null))
+                    .appendQueryParameter("id",preferences.getString("no",null));
+            String query=builder.build().getEncodedQuery();
+            Log.d("query",query);
+            OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
+            wr.write( query );
+            wr.flush();
+            String line=null;
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            StringBuilder sb = new StringBuilder();
+            while((line = reader.readLine()) != null)
+            {
+                // Append server response in string
+                Log.d("Response",line);
+                tv.setText(line);
             }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return result;
     }
-
     public boolean isConnected(){
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -79,9 +83,9 @@ public class Scan extends Activity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        startActivityForResult(new Intent(Login.this, Finger.class),1003);
         super.onCreate(savedInstanceState);
-        startActivityForResult(new Intent(Scan.this, Finger.class),1002);
-        setContentView(R.layout.activity_scan);
+        setContentView(R.layout.activity_login);
         sv=(SurfaceView)findViewById(R.id.surfaceView1);
         tv=(TextView)findViewById(R.id.textView1);
         BarcodeDetector barcodeDetector= new BarcodeDetector.Builder(this).setBarcodeFormats(Barcode.QR_CODE).build();
@@ -119,6 +123,7 @@ public class Scan extends Activity {
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
+
             }
         });
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
@@ -137,21 +142,15 @@ public class Scan extends Activity {
 
                                     barcodes.valueAt(0).displayValue
                             );
-                            String s= barcodes.valueAt(0).displayValue;
+                            s= barcodes.valueAt(0).displayValue;
                             tv.setVisibility(View.GONE);
                             cameraSource.release();
                             cameraSource.stop();
-                            users=s.split("\\r?\\n");
-                            user=new User(users[0]+" "+users[1],users[2],users[3]);
-                            new Register().execute();
+                            preferences=getSharedPreferences("prefs", Context.MODE_PRIVATE);
+                            new Logon().execute();
                             Toast.makeText(getApplicationContext(),"Executed!!!!",Toast.LENGTH_SHORT).show();
-                            Intent i=new Intent();
-                            i.putExtra("fname",users[0]);
-                            i.putExtra("lname",users[1]);
-                            i.putExtra("email",users[2]);
-                            i.putExtra("no",users[3]);
-                            setResult(RESULT_OK,i);
-                            Toast.makeText(getApplication(),"Sending Result",Toast.LENGTH_SHORT).show();
+                            if(tv.getText()!=null)
+                                Toast.makeText(getApplicationContext(),tv.getText(),Toast.LENGTH_SHORT).show();
                             finish();
                         }
                     });
@@ -159,11 +158,10 @@ public class Scan extends Activity {
             }
         });
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1002) {
+        if (requestCode == 1003) {
             if (resultCode == RESULT_CANCELED) {
                 Intent i=new Intent();
                 setResult(RESULT_CANCELED,i);
@@ -171,9 +169,9 @@ public class Scan extends Activity {
             }
         }
     }
+
 }
-class Register extends AsyncTask<String,Void,String>
-{
+class Logon extends AsyncTask<String, Void, String> {
     @Override
     public void onPreExecute()
     {
@@ -186,7 +184,5 @@ class Register extends AsyncTask<String,Void,String>
     @Override
     protected String doInBackground(String... args) {
         Log.d("d","Inside doInBackground");
-        return POST();
-    }
-}
-
+        return Login.POST(Login.s);
+    }}
