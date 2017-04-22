@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.shreyamshah.sqrl.AboutUs">
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="368dp"
+        android:layout_height="51dp"
+        android:textAlignment="center"
+        android:text="About Us"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_editor_absoluteY="34dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="72dp" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="368dp"
+        android:layout_height="172dp"
+        android:textAlignment="center"
+        android:text="This app is made by 3 students of D J Sanghvi College of\n Engineering\n Shreyam Shah, Mayur Mistry and Dhawal Panchal as a part\n of their final year project. \n We thank our project guide Prof. Arjun Jaiswal for his\n valuable inputs."
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:layout_editor_absoluteY="208dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        android:layout_below="@+id/textView4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="142dp" />
+</RelativeLayout>
